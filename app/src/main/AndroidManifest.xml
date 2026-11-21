@@ -16,6 +16,12 @@
     <!-- updates from the app's releases: Android's installer asks to confirm each one -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
+    <!-- The Wi-Fi permissions and the Xbox player's landscape screen would otherwise make Google Play
+         require Wi-Fi and a landscape screen, hiding the app from devices without them (Ethernet works
+         too, and the player also shows in portrait) -->
+    <uses-feature android:name="android.hardware.wifi" android:required="false" />
+    <uses-feature android:name="android.hardware.screen.landscape" android:required="false" />
+
     <!-- usesCleartextTraffic: the TV page and the TV apps are plain HTTP on the home network -->
     <application
         android:name=".App"

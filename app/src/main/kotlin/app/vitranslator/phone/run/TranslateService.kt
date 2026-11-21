@@ -90,6 +90,8 @@ class TranslateService : Service(), PsStream.Listener {
         val stop = PendingIntent.getService(this, 1, Intent(this, TranslateService::class.java).setAction(ACTION_STOP), PendingIntent.FLAG_IMMUTABLE)
         val n = Notification.Builder(this, CHANNEL)
             .setSmallIcon(R.drawable.ic_notify)
+            // (the app's pink behind the icon in the notification list)
+            .setColor(0xFFE0367F.toInt())
             .setContentTitle(getString(R.string.app_name))
             .setContentText(getString(R.string.notify_text))
             .setContentIntent(open)

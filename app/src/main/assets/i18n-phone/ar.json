@@ -121,5 +121,9 @@
  "The PIN has 8 digits.": "رمز PIN من 8 أرقام.",
  "Linked": "مربوط",
  "Start translating connects to it with Remote Play. If it is in rest mode, Wake turns it on.": "يتصل «ابدأ الترجمة» به عبر التشغيل عن بُعد. إن كان في وضع الراحة فإن «أيقظ» يشغّله.",
- "Waking {name}…": "جارٍ إيقاظ {name}…"
+ "Waking {name}…": "جارٍ إيقاظ {name}…",
+ "VI Translator closed unexpectedly last time": "أُغلق VI Translator بشكل غير متوقع في المرة السابقة",
+ "Copy the details and send them to the developer, so the problem can be fixed.": "انسخ التفاصيل وأرسلها إلى المطوّر ليُصلَح الخلل.",
+ "Copy the details": "انسخ التفاصيل",
+ "Not now": "ليس الآن"
 }

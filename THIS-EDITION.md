@@ -22,7 +22,7 @@ Tizen), which draws the translations over the game.
   original and installs beside it. The code keeps the original package names.
 - **Thai for the phone's own phrases** (`app/src/main/assets/i18n-phone/th.json`).
 
-Changed on 21 November 2026, from the original's commit `6cd9e5b`.
+Changed on 21 November 2026, from the original's commit `6cd9e5b`; the original's later fixes up to `95485f4` (the PS5 picture read through the GPU, no more green striped picture) are merged in.
 
 ## What it still talks to
 

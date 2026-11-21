@@ -95,6 +95,7 @@ class MainActivity : Activity(), Live.Watcher, CoreListener, Host {
                 loaded = true
                 build()
                 debugOptions(intent)
+                offerCrash()
             }
         }
         if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
@@ -130,6 +131,7 @@ class MainActivity : Activity(), Live.Watcher, CoreListener, Host {
         root.addView(updateBar)
         body = FrameLayout(this)
         root.addView(body, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
+        root.clearOfSystemBars()
         setContentView(root)
         window.statusBarColor = k.panel
         window.navigationBarColor = k.bg
@@ -453,6 +455,27 @@ class MainActivity : Activity(), Live.Watcher, CoreListener, Host {
         }
         updateBar.addView(k.grow(k.text(text, k.base - 1f)))
         updateBar.addView(k.button(T("Update now"), primary = true) { Updater.install(this, r) { main.post { showUpdate() } } })
+    }
+
+    /** If the app ended with a crash last time: offer to copy the report (nothing is sent by itself). */
+    private fun offerCrash() {
+        val report = app.vitranslator.phone.Crashes.take(this) ?: return
+        var d: android.app.Dialog? = null
+        d = k.dialog(k.card(18,
+            k.text(T("VI Translator closed unexpectedly last time"), k.base + 0.5f, k.text, k.bold),
+            k.muted(T("Copy the details and send them to the developer, so the problem can be fixed."), small = true).apply { setPadding(0, k.dp(8), 0, 0) },
+            k.gap(14),
+            k.row(
+                k.grow(k.button(T("Not now")) { d?.dismiss() }),
+                k.grow(k.button(T("Copy the details"), primary = true) {
+                    val cm = getSystemService(android.content.ClipboardManager::class.java)
+                    cm.setPrimaryClip(android.content.ClipData.newPlainText("VI Translator crash", report))
+                    android.widget.Toast.makeText(this, T("Copied."), android.widget.Toast.LENGTH_SHORT).show()
+                    d?.dismiss()
+                }),
+            ),
+        ))
+        d.show()
     }
 
     // ---- debug builds, for emulators: --es advertise 10.0.2.2:8791 (the stand-in core), --es fake_ps5 <address>, --es mode, --es tab
