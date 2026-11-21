@@ -1,3 +1,5 @@
+> **This repository is a modified edition** (ซับไทยขึ้นทีวี รีโมท) of VI Translator for Android. What it changes, and why, is in [THIS-EDITION.md](THIS-EDITION.md). The text below is the original app's README.
+
 <p align="center">
   <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="VI Translator logo" width="160" />
 </p>

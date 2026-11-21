@@ -13,7 +13,6 @@ import app.vitranslator.phone.Prefs
 import app.vitranslator.phone.R
 import app.vitranslator.phone.ps.Ps5
 import app.vitranslator.phone.ps.Psn
-import app.vitranslator.phone.ps.PsnLoginActivity
 import app.vitranslator.phone.ps.chiaki.Chiaki
 import app.vitranslator.phone.ps.chiaki.DiscoveryHost
 import app.vitranslator.phone.ps.chiaki.DiscoveryService
@@ -197,12 +196,11 @@ class Ps5Link(private val h: Host, private val redraw: () -> Unit) {
             return c
         }
         c.addView(k.callout(T("Sign in with a second PSN account, not the one you play with: Remote Play signs it in on the PS5. Only its account ID is kept."), k.warn))
-        c.addView(k.button(T("Sign in to PSN"), primary = true) {
-            @Suppress("DEPRECATION")
-            h.act.startActivityForResult(Intent(h.act, PsnLoginActivity::class.java), REQ_PSN)
-        }.apply { layoutParams = lp(10) })
-        c.addView(k.muted(T("If Sony says it can't connect, wait a few seconds and press Sign In again; or sign in with a browser."), small = true).apply { setPadding(0, k.dp(8), 0, 0) })
-        c.addView(k.link(T("Sign in with a browser")) { pasteAddress() })
+        // This edition has no PSN sign-in inside the app: the password is only ever typed in the
+        // user's own browser, on Sony's page. The app gets the one-time code from the address the
+        // browser ends on, or the account ID typed below.
+        c.addView(k.muted(T("Your PSN password is never typed in this app: you sign in on Sony's page in your own browser."), small = true).apply { setPadding(0, k.dp(8), 0, 0) })
+        c.addView(k.button(T("Sign in with a browser"), primary = true) { pasteAddress() }.apply { layoutParams = lp(10) })
         // (an account ID already known: typed or pasted)
         val typed = k.input(Ps5.accountId(h.act), "", ltr = true) {}
         c.addView(k.field(T("Or type the account ID"), typed))
@@ -220,15 +218,7 @@ class Ps5Link(private val h: Host, private val redraw: () -> Unit) {
     }
 
     fun result(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode != REQ_PSN) return
-        val id = data?.getStringExtra(PsnLoginActivity.EXTRA_ACCOUNT_ID)
-        if (resultCode == Activity.RESULT_OK && id != null) {
-            Ps5.saveAccountId(h.act, id)
-            editingAccount = false
-            redraw()
-        } else data?.getStringExtra(PsnLoginActivity.EXTRA_ERROR)?.let {
-            android.widget.Toast.makeText(h.act, T("PSN sign-in didn't work: {e}", "e" to it), android.widget.Toast.LENGTH_LONG).show()
-        }
+        // (nothing comes back here in this edition: there is no sign-in screen inside the app)
     }
 
     /**

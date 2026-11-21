@@ -20,7 +20,6 @@ import app.vitranslator.phone.ps.Ps5
 import app.vitranslator.phone.ps.chiaki.Chiaki
 import app.vitranslator.phone.run.Live
 import app.vitranslator.phone.run.TranslateService
-import app.vitranslator.phone.xbox.XboxActivity
 
 /**
  * Play, as on the desktop: start (the phone's own step: it connects to the console), the picture with
@@ -126,7 +125,6 @@ class PlayPanel(h: Host) : Panel(h) {
         start.setCompoundDrawablesRelativeWithIntrinsicBounds(if (running) null else k.tinted(R.drawable.ic_play, Color.WHITE, 16), null, null, null)
         val console = Prefs(h.act).console
         startNote.text = when {
-            console == "xbox" -> T("Xbox: Microsoft's Remote Play player opens; keep the phone's screen on while playing.")
             console == "ps5" -> T("Keep VI Translator open while playing (with a PS5 the screen can be off).")
             else -> T("Choose your console in Source first.")
         }
@@ -184,7 +182,6 @@ class PlayPanel(h: Host) : Panel(h) {
         val ps = Ps5.saved(h.act)
         val source = when (console) {
             "ps5" -> if (ps != null) "PlayStation 5 · ${ps.nickname.ifEmpty { ps.host }}" else T("PlayStation 5 (not linked yet)")
-            "xbox" -> "Xbox"
             else -> T("Not chosen yet")
         }
         val sourceNote = when {
@@ -270,7 +267,6 @@ class PlayPanel(h: Host) : Panel(h) {
         }
         when (Prefs(h.act).console) {
             "ps5" -> TranslateService.start(h.act, TranslateService.Source.PS5)
-            "xbox" -> XboxActivity.open(h.act)
             else -> h.go("source")
         }
     }

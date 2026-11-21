@@ -1,17 +1,6 @@
 package app.vitranslator.phone.ps
 
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
-import android.os.Bundle
 import java.util.Base64
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import app.vitranslator.phone.Lang
 import org.json.JSONObject
 import java.io.IOException
 import java.net.HttpURLConnection
@@ -20,7 +9,8 @@ import java.net.URLEncoder
 
 /**
  * The PSN account ID, which registering with a PS5 needs: the user signs in on Sony's own page
- * (Remote Play's sign-in, as chiaki-ng does it), which sends back a code; the code gives a token,
+ * in their own browser, never inside this app (this edition has no sign-in screen), and pastes
+ * the address the browser ends on, which carries a one-time code; the code gives a token,
  * and the token's details give the account's number (8 bytes, little-endian, in base64). The app
  * keeps only the account ID: no password, and the token is dropped.
  */
@@ -80,80 +70,5 @@ object Psn {
         } finally {
             c.disconnect()
         }
-    }
-}
-
-/** Sony's sign-in page; returns [EXTRA_ACCOUNT_ID] (or an [EXTRA_ERROR]). */
-class PsnLoginActivity : Activity() {
-    private lateinit var web: WebView
-    private var done = false
-
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(Lang.wrap(base))
-    }
-
-    @SuppressLint("SetJavaScriptEnabled")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // (Sony's page asks to sign in every time: prompt=always. The cookies are shared with the
-        // Xbox player, so they aren't cleared here)
-        web = WebView(this)
-        web.settings.javaScriptEnabled = true
-        web.settings.domStorageEnabled = true
-        // Sony's sign-in page talks to its account servers on another domain, with their cookies
-        // (blocked in a WebView by default: "can't connect to the server" at Sign In)
-        android.webkit.CookieManager.getInstance().setAcceptCookie(true)
-        android.webkit.CookieManager.getInstance().setAcceptThirdPartyCookies(web, true)
-        // (the WebView's own identity is kept: Sony's bot check compares it with the browser's other
-        // signals. Its "Can't connect to the server" comes and goes: waiting a little on the page,
-        // then Sign In again, gets through)
-        web.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean = caught(request.url)
-
-            override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
-                caught(Uri.parse(url))
-            }
-        }
-        setContentView(web)
-        web.loadUrl(Psn.loginUrl)
-    }
-
-    /** Sony's page sends back to the redirect address with ?code=: take it, never load it. */
-    private fun caught(u: Uri): Boolean {
-        if (!u.toString().startsWith(Psn.REDIRECT)) return false
-        if (done) return true
-        done = true
-        web.stopLoading()
-        val code = u.getQueryParameter("code")
-        if (code.isNullOrEmpty()) {
-            finishWith(null, u.getQueryParameter("error_description") ?: u.getQueryParameter("error") ?: "no code")
-            return true
-        }
-        Thread {
-            val r = try {
-                Psn.accountId(code) to null
-            } catch (e: Exception) {
-                null to (e.message ?: e.toString())
-            }
-            runOnUiThread { finishWith(r.first, r.second) }
-        }.start()
-        return true
-    }
-
-    private fun finishWith(accountId: String?, error: String?) {
-        val data = Intent()
-        if (accountId != null) data.putExtra(EXTRA_ACCOUNT_ID, accountId) else data.putExtra(EXTRA_ERROR, error)
-        setResult(if (accountId != null) RESULT_OK else RESULT_CANCELED, data)
-        finish()
-    }
-
-    override fun onDestroy() {
-        web.destroy()
-        super.onDestroy()
-    }
-
-    companion object {
-        const val EXTRA_ACCOUNT_ID = "account_id"
-        const val EXTRA_ERROR = "error"
     }
 }

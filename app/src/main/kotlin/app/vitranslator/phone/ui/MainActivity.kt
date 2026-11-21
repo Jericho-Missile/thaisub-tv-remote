@@ -151,7 +151,7 @@ class MainActivity : Activity(), Live.Watcher, CoreListener, Host {
             layoutParams = LinearLayout.LayoutParams(k.dp(36), k.dp(36))
         }
         val version = k.text("v" + Updater.current(this), k.base - 2.5f, k.muted, k.bold).apply { textDirection = View.TEXT_DIRECTION_LTR }
-        val brand = k.column(k.text("VI Translator", k.base + 1.5f, k.text, k.heavy), version)
+        val brand = k.column(k.text(getString(R.string.app_name), k.base + 1.5f, k.text, k.heavy), version)
         savedLabel = k.text("", k.base - 2.5f, k.muted)
         val globe = k.iconButton(R.drawable.ic_globe, T("App language")) { pickLanguage() }
         val theme = k.iconButton(if (k.dark) R.drawable.ic_sun else R.drawable.ic_moon, T("Switch between light and dark")) {

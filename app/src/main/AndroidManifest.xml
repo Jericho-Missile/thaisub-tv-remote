@@ -37,17 +37,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".xbox.XboxActivity"
-            android:exported="false"
-            android:screenOrientation="sensorLandscape"
-            android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|smallestScreenSize" />
-
-        <activity
-            android:name=".ps.PsnLoginActivity"
-            android:exported="false" />
-
         <service
             android:name=".run.TranslateService"
             android:exported="false"

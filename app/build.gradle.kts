@@ -30,7 +30,9 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "app.vitranslator.phone"
+        // This edition's own ID, so it installs beside the original app and is never taken for it
+        // (the code keeps the original package names: the Remote Play library is built against them).
+        applicationId = "app.thaisubtv.remote"
         // Android 8.0: PixelCopy of a window (the Xbox player) and the decoder writing to an ImageReader
         minSdk = 26
         targetSdk = 36

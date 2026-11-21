@@ -5,6 +5,8 @@ on:
   push:
     branches: [main]
   pull_request:
+  # (this edition: also by hand, from the Actions tab)
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -72,10 +74,11 @@ jobs:
             echo "::error::app/src/main/kotlin/app/vitranslator/core/vi_translator_ffi.kt differs from the core's at native/core.ref: commit the copied file"; exit 1; }
 
       - name: Tests and the debug APK
-        run: ./gradlew --no-daemon testGithubDebugUnitTest assembleDebug lintGithubDebug lintPlayDebug -PrequireNative
+        # (this edition is built from the play flavour only: no self-update)
+        run: ./gradlew --no-daemon testPlayDebugUnitTest assemblePlayDebug -PrequireNative
 
       - uses: actions/upload-artifact@v4
         with:
-          name: vi-translator-android-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: thaisub-tv-remote-debug
+          path: app/build/outputs/apk/play/debug/app-play-debug.apk
           if-no-files-found: error
