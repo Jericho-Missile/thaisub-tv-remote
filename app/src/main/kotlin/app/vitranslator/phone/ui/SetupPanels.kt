@@ -391,6 +391,13 @@ class TranslatorPanel(h: Host) : Panel(h) {
         })
         add(k.muted(T("The phone app has no free offline model: lines the translation memory knows (reviewed translations from vitranslator.app) are free; for the others choose DeepL, Azure, Google, LibreTranslate, Claude or ChatGPT."), small = true).apply { setPadding(0, k.dp(6), 0, 0) })
 
+        // this edition: the camera app's swear switch, for Thai (the core's "swear" setting; see its thai.rs)
+        if (cfg.str("target_lang", "ar") == "th") {
+            add(k.h3(T("Swearing")))
+            add(k.switch(T("Swear words"), cfg.bool("swear", true)) { cfg.put("swear", it, now = true) })
+            add(k.muted(T("On: English swearing becomes Thai swearing just as strong, with the rough words for I and you only on lines that swear. Off: polite, nothing crude. Claude and ChatGPT follow it. Switching forgets the lines this phone remembered, so they are translated again the new way."), small = true).apply { setPadding(0, k.dp(4), 0, 0) })
+        }
+
         add(k.h3(T("Translation service")))
         val engine = cfg.str("engine", "local")
         for (e in ENGINES) {

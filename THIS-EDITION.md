@@ -21,6 +21,15 @@ Tizen), which draws the translations over the game.
 - **Its own name, icon and application ID** (`app.thaisubtv.remote`), so it is never taken for the
   original and installs beside it. The code keeps the original package names.
 - **Thai for the phone's own phrases** (`app/src/main/assets/i18n-phone/th.json`).
+- **A swear switch for Thai, as the camera app ซับไทยขึ้นทีวี 1.0.9 has it** (Settings → Translator,
+  shown when the language is Thai; on by default). On: English swearing becomes Thai street swearing
+  just as strong, with กู/มึง only on a line that swears; a calm line keeps ฉัน and นาย/เธอ. Off:
+  nothing crude. Claude and ChatGPT follow it; with it on, a line that swears comes from them rather
+  than from a reviewed translation. Every Thai line loses the words that tell the speaker's sex
+  (ครับ, ค่ะ, ผม). Switching forgets the lines the phone remembered. This needs a change to the
+  shared core (MIT-licensed, from the desktop app's repository), kept here as a patch on the commit
+  in `native/core.ref`: `native/core-patches/0001-thai-swear-switch.patch` (a new `core/src/thai.rs`,
+  with its tests, and a `swear` setting). CI applies it before building and runs its tests.
 
 Changed on 21 November 2026, from the original's commit `6cd9e5b`; the original's later fixes up to `95485f4` (the PS5 picture read through the GPU, no more green striped picture) are merged in.
 

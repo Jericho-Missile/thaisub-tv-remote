@@ -92,5 +92,8 @@
  "Wake the PS5": "ปลุก PS5",
  "Waking {name}…": "กำลังปลุก {name}…",
  "Your PSN password is never typed in this app: you sign in on Sony's page in your own browser.": "คุณไม่ต้องพิมพ์รหัสผ่าน PSN ในแอปนี้ การล็อกอินทำบนหน้าเว็บของ Sony ในเบราว์เซอร์ของคุณเอง",
- "{n} read · {ms} ms": "อ่านแล้ว {n} · {ms} มิลลิวินาที"
+ "{n} read · {ms} ms": "อ่านแล้ว {n} · {ms} มิลลิวินาที",
+ "Swearing": "คำหยาบ",
+ "Swear words": "คำหยาบ",
+ "On: English swearing becomes Thai swearing just as strong, with the rough words for I and you only on lines that swear. Off: polite, nothing crude. Claude and ChatGPT follow it. Switching forgets the lines this phone remembered, so they are translated again the new way.": "เปิด: คำด่าภาษาอังกฤษแปลเป็นคำด่าไทยแรงเท่ากัน ใช้ กู/มึง เฉพาะประโยคที่มีคำด่า · ปิด: สุภาพ ไม่มีคำหยาบเลย ใช้กับ Claude และ ChatGPT · เมื่อสลับ แอปจะลืมคำแปลที่จำไว้ในเครื่องนี้ แล้วแปลใหม่ตามแบบที่เลือก"
 }

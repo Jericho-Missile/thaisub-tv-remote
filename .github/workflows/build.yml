@@ -45,6 +45,19 @@ jobs:
           echo "VIT_CORE_DIR=$GITHUB_WORKSPACE/core-src" >> "$GITHUB_ENV"
           echo "core_sha=$(git -C core-src rev-parse HEAD)" >> "$GITHUB_ENV"
 
+      # (this edition: its changes to the shared core, kept as patches on the commit in native/core.ref;
+      # the Thai swear switch is native/core-patches/0001-thai-swear-switch.patch)
+      - name: This edition's changes to the core
+        run: |
+          for p in native/core-patches/*.patch; do
+            echo "== $p"
+            git -C core-src apply --whitespace=nowarn "$GITHUB_WORKSPACE/$p"
+          done
+
+      - name: The core's Thai tests (the swear switch)
+        working-directory: core-src
+        run: cargo test -p vi-translator-core --lib thai::
+
       - name: Tools for chiaki-ng
         run: |
           sudo apt-get update
@@ -62,7 +75,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: native/out
-          key: native-${{ steps.chiaki.outputs.sha }}-${{ env.core_sha }}-${{ hashFiles('native/CMakeLists.txt', 'native/build.sh', 'native/jni/**', 'native/cmake/**') }}
+          key: native-${{ steps.chiaki.outputs.sha }}-${{ env.core_sha }}-${{ hashFiles('native/CMakeLists.txt', 'native/build.sh', 'native/jni/**', 'native/cmake/**', 'native/core-patches/**') }}
 
       - name: Build the native libraries
         if: steps.native-cache.outputs.cache-hit != 'true'
