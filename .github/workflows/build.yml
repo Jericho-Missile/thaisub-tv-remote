@@ -56,7 +56,7 @@ jobs:
 
       - name: The core's Thai tests (the swear switch)
         working-directory: core-src
-        run: cargo test -p vi-translator-core --lib thai::
+        run: cargo test -p vi-translator-core --lib thai::tests
 
       - name: Tools for chiaki-ng
         run: |
