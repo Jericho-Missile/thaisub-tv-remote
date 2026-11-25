@@ -172,7 +172,13 @@ class StubCore(context: Context, private val recognizer: Recognizer) : Core {
 
     override fun pairTv(address: String, code: String): PairResult {
         val to = TvLink.normalize(address) ?: return PairResult.UNREACHABLE
-        if (server == null) return PairResult.NOT_SHARING
+        if (server == null) {
+            try {
+                startServer()
+            } catch (e: java.io.IOException) {
+                return PairResult.PORT_BUSY
+            }
+        }
         val pc = advertise.ifEmpty { TvLink.ownAddress(ctx)?.hostAddress?.let { "$it:$PAGE_PORT" } } ?: return PairResult.UNREACHABLE
         val bytes = ByteArray(32).also { random.nextBytes(it) }
         val token = bytes.joinToString("") { String.format(Locale.ROOT, "%02x", it) }
@@ -187,7 +193,7 @@ class StubCore(context: Context, private val recognizer: Recognizer) : Core {
 
     /**
      * The address given to the TVs for this phone's page, instead of its own (debug builds, for
-     * emulators behind NAT: "10.0.2.2:8791" with adb forwarding). Empty: its own.
+     * emulators behind NAT: "10.0.2.2:8795" with adb forwarding). Empty: its own.
      */
     var advertise: String
         get() = prefs.getString("advertise", "") ?: ""
@@ -229,7 +235,7 @@ class StubCore(context: Context, private val recognizer: Recognizer) : Core {
         }
     }
 
-    // ---- the TV page (http://phone:8791/tv?t=key), as the PC app serves it
+    // ---- the TV page (http://phone:8795/tv?t=key), as the PC app serves it (on its own port here)
 
     private fun serve() {
         while (true) {
@@ -316,7 +322,7 @@ class StubCore(context: Context, private val recognizer: Recognizer) : Core {
     data class Area(val id: String, val left: Float, val top: Float, val right: Float, val bottom: Float)
 
     companion object {
-        const val PAGE_PORT = 8791
+        const val PAGE_PORT = RustCore.PORT
 
         /** this run (the TV page reloads itself when it changes, as with the PC app) */
         private val BUILD = SecureRandom().nextLong().toString(16)

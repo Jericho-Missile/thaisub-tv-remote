@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Reads the game: of the frames offered (as fast as they come), takes one whenever the core is
- * ready for the next (it sets the pace, about 4 a second), and gives it to the core, which crops
+ * ready for the next (it sets the pace, about 8 a second here), and gives it to the core, which crops
  * its areas and has ML Kit read them. A frame offered while the last one is still being read, or
  * too early, is skipped at once, so the stream never waits for the reading.
  */

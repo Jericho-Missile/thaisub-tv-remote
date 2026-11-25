@@ -8,6 +8,7 @@ import app.vitranslator.phone.App
 import app.vitranslator.phone.Prefs
 import app.vitranslator.phone.R
 import app.vitranslator.phone.core.PairResult
+import app.vitranslator.phone.core.RustCore
 import app.vitranslator.phone.core.Tv
 import app.vitranslator.phone.ps.Ps5
 import app.vitranslator.phone.ps.chiaki.Chiaki
@@ -287,6 +288,7 @@ class ShowPanel(h: Host) : Panel(h) {
                             PairResult.NEW_CODE -> T("Too many wrong codes: the TV shows a new one.")
                             PairResult.NOT_SHARING -> T("This phone isn't on a home network: connect it to the same Wi-Fi as the TV.")
                             PairResult.UNREACHABLE -> T("The TV didn't answer. Is VI Translator still open on it?")
+                            PairResult.PORT_BUSY -> T("This phone couldn't open the page the TV reads (port {port} is used by another app). Close the other app that sends subtitles to a TV, then try again.", "port" to RustCore.PORT)
                         }
                         if (r == PairResult.OK) {
                             d?.dismiss()

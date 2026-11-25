@@ -17,7 +17,8 @@ import app.vitranslator.phone.read.Reader
 /**
  * PS Remote Play from the PS5, for reading only: chiaki-ng's session decodes the video with
  * MediaCodec straight into a GPU texture (GlFrames: no screen), no sound. Every frame is taken at
- * once (so the decoder never waits); about 4 a second are copied and read.
+ * once (so the decoder never waits); about 8 a second are copied and read. H.265 where the phone
+ * has a hardware decoder for it (VideoCodecs), else H.264.
  */
 class PsStream(
     private val console: PsConsole,
@@ -42,8 +43,18 @@ class PsStream(
     var frames = 0L
         private set
 
-    fun start(resolution: VideoResolutionPreset = VideoResolutionPreset.RES_1080P) {
-        val profile = ConnectVideoProfile.preset(resolution, VideoFPSPreset.FPS_30, Codec.CODEC_H264)
+    /** the stream's codec (set by [start]) */
+    @Volatile
+    var codec = Codec.CODEC_H264
+        private set
+
+    /** [h265]: allowed, where the phone plays it (false after it showed no picture here). */
+    fun start(resolution: VideoResolutionPreset = VideoResolutionPreset.RES_1080P, h265: Boolean = true) {
+        val size = ConnectVideoProfile.preset(resolution, VideoFPSPreset.FPS_30, Codec.CODEC_H264)
+        codec = VideoCodecs.pick(VideoCodecs.onThisPhone(), size.width, size.height, allowed = h265)
+        val profile = if (codec == Codec.CODEC_H264) size else ConnectVideoProfile.preset(resolution, VideoFPSPreset.FPS_30, codec)
+        Log.i(TAG, "${profile.width}x${profile.height} $codec")
+        shown = if (codec == Codec.CODEC_H264) "H.264" else "H.265"
         // (through the GPU: the decoder's own buffers can't be read by the CPU on every phone, see GlFrames)
         val glFrames = GlFrames(profile.width, profile.height) { frame ->
             this.frames++
@@ -68,7 +79,8 @@ class PsStream(
             return
         }
         s.eventCallback = { ev ->
-            when (ev) {
+            // (none after stop: a stream given up on, for one with the other codec, ends quietly)
+            if (session != null) when (ev) {
                 ConnectedEvent -> listener.onState(State.STREAMING, null)
                 is LoginPinRequestEvent -> listener.onLoginPin(ev.pinIncorrect)
                 is QuitEvent -> listener.onState(if (ev.reason.isError) State.FAILED else State.ENDED, ev.reasonString ?: ev.reason.toString())
@@ -95,9 +107,15 @@ class PsStream(
         }
         gl?.stop()
         gl = null
+        shown = ""
     }
 
     companion object {
         private const val TAG = "PsStream"
+
+        /** The codec of the stream being read, for the screen ("H.265"; "" when none). */
+        @Volatile
+        var shown = ""
+            private set
     }
 }

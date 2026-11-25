@@ -137,7 +137,17 @@ class RustCore(context: Context, recognizer: Recognizer) : Core {
 
     override fun findTvs(): List<Tv> = engine.findTvs().filter { !it.connected }.map { Tv(it.id, it.name, it.address) }
 
-    override fun pairTv(address: String, code: String): PairResult = try {
+    override fun pairTv(address: String, code: String): PairResult {
+        // (the TV page first: it may not have opened when the app started, another app holding the port then)
+        try {
+            engine.startTvServer(PORT.toUShort())
+        } catch (e: FfiCoreException) {
+            return PairResult.PORT_BUSY
+        }
+        return pair(address, code)
+    }
+
+    private fun pair(address: String, code: String): PairResult = try {
         engine.pairTv(address.trim(), code.trim(), deviceName())
         PairResult.OK
     } catch (e: PairException.WrongCode) {
@@ -166,7 +176,11 @@ class RustCore(context: Context, recognizer: Recognizer) : Core {
     }
 
     companion object {
-        /** the TV page's port, as the desktop app's */
-        const val PORT = 8791
+        /**
+         * the TV page's port: not the desktop's 8791 (this edition), which the camera app ซับไทยขึ้นทีวี
+         * holds while it runs, on many of the same phones; a TV finds the phone by the port it was
+         * connected with, so either app's TV keeps working
+         */
+        const val PORT = 8795
     }
 }

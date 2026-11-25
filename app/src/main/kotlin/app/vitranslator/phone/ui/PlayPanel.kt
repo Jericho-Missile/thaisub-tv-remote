@@ -17,6 +17,7 @@ import app.vitranslator.phone.Prefs
 import app.vitranslator.phone.R
 import app.vitranslator.phone.core.Line
 import app.vitranslator.phone.ps.Ps5
+import app.vitranslator.phone.ps.PsStream
 import app.vitranslator.phone.ps.chiaki.Chiaki
 import app.vitranslator.phone.run.Live
 import app.vitranslator.phone.run.TranslateService
@@ -171,7 +172,8 @@ class PlayPanel(h: Host) : Panel(h) {
 
     override fun tick() {
         val r = App.reader
-        stats.text = if (r != null && Live.state == Live.State.READING) T("{n} read · {ms} ms", "n" to r.read, "ms" to r.lastMs) else ""
+        // (with the PS5 stream's codec: "H.265" says the sharper picture is in use)
+        stats.text = if (r != null && Live.state == Live.State.READING) T("{n} read · {ms} ms", "n" to r.read, "ms" to r.lastMs) + PsStream.shown.let { if (it.isEmpty()) "" else " · $it" } else ""
         stats.visibility = if (stats.text.isEmpty() || !cfg.bool("fps_badge", false)) View.GONE else View.VISIBLE
     }
 

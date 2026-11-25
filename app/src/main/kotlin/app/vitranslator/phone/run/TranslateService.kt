@@ -32,6 +32,7 @@ import app.vitranslator.phone.read.Reader
 import app.vitranslator.phone.ps.Ps5
 import app.vitranslator.phone.ps.PsStream
 import app.vitranslator.phone.ps.chiaki.Chiaki
+import app.vitranslator.phone.ps.chiaki.Codec
 import app.vitranslator.phone.ps.chiaki.VideoResolutionPreset
 import app.vitranslator.phone.ui.MainActivity
 import java.io.File
@@ -154,14 +155,33 @@ class TranslateService : Service(), PsStream.Listener {
             return
         }
         val res = if (prefs.psResolution == 720) VideoResolutionPreset.RES_720P else VideoResolutionPreset.RES_1080P
-        stream = PsStream(console, reader, this, File(cacheDir, "chiaki.log").path).also { it.start(res) }
+        stream = PsStream(console, reader, this, File(cacheDir, "chiaki.log").path).also { it.start(res, prefs.psH265) }
+    }
+
+    /**
+     * An H.265 stream that shows no picture (a decoder that said it plays it, but doesn't): this phone
+     * gets H.264 from now on, and the stream starts again with it at once.
+     */
+    private fun checkPicture(s: PsStream) {
+        if (stream !== s || s.frames > 0) return
+        Log.w(TAG, "no picture with ${s.codec}: H.264 from now on")
+        val prefs = Prefs(this)
+        prefs.psH265 = false
+        s.stop()
+        stream = null
+        Live.set(Live.State.CONNECTING, null)
+        main.postDelayed({ if (source == Source.PS5 && stream == null) startPs(prefs) }, 1500)
     }
 
     override fun onState(state: PsStream.State, detail: String?) {
         main.post {
             when (state) {
                 PsStream.State.CONNECTING -> Live.set(Live.State.CONNECTING, null)
-                PsStream.State.STREAMING -> Live.set(Live.State.READING, null)
+                PsStream.State.STREAMING -> {
+                    Live.set(Live.State.READING, null)
+                    val s = stream
+                    if (s != null && s.codec != Codec.CODEC_H264) main.postDelayed({ checkPicture(s) }, NO_PICTURE_MS)
+                }
                 PsStream.State.ENDED, PsStream.State.FAILED -> {
                     Live.set(if (state == PsStream.State.FAILED) Live.State.FAILED else Live.State.ENDED, detail)
                     stopSelf()
@@ -258,6 +278,9 @@ class TranslateService : Service(), PsStream.Listener {
 
     companion object {
         private const val TAG = "TranslateService"
+
+        /** An H.265 stream with no picture this long after it connected is given up for H.264. */
+        private const val NO_PICTURE_MS = 10_000L
         private const val CHANNEL = "translating"
         private const val NOTIFICATION = 1
         private const val ACTION_STOP = "app.vitranslator.phone.STOP"

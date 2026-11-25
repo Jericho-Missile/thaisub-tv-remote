@@ -151,6 +151,9 @@ enum class PairResult {
 
     /** this phone isn't serving the TV page (no Wi-Fi?) */
     NOT_SHARING,
+
+    /** the TV page couldn't be opened on this phone: another app holds its port */
+    PORT_BUSY,
 }
 
 interface CoreListener {

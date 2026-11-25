@@ -2,9 +2,9 @@ plugins {
     id("com.android.application")
 }
 
-// The version: -Pversion=1.2.3 (the release workflow passes the tag's), else 0.1.0. The version
+// The version: -Pversion=1.2.3 (the release workflow passes the tag's), else this test build's. The version
 // code grows with it (1.2.3 -> 10203), so a newer release always installs over an older one.
-val appVersion = (findProperty("version") as String?)?.takeIf { it != "unspecified" } ?: "0.1.0"
+val appVersion = (findProperty("version") as String?)?.takeIf { it != "unspecified" } ?: "0.1.2"
 val appVersionCode = appVersion.split(".").map { it.toInt() }.let { (a, b, c) -> a * 10000 + b * 100 + c }
 
 // Release signing, from the environment (the release workflow sets these from the repository's

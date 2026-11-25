@@ -30,6 +30,16 @@ Tizen), which draws the translations over the game.
   shared core (MIT-licensed, from the desktop app's repository), kept here as a patch on the commit
   in `native/core.ref`: `native/core-patches/0001-thai-swear-switch.patch` (a new `core/src/thai.rs`,
   with its tests, and a `swear` setting). CI applies it before building and runs its tests.
+- **A sharper, quicker PS5 picture and reading (0.1.2).** The stream is H.265 where the phone has a
+  hardware decoder for it at the stream's size, else H.264 (`ps/VideoCodecs.kt`); an H.265 stream
+  that shows no picture within 10 seconds is started again in H.264, which that phone keeps. The
+  quality is 1080p by default (720p is still in Source). The reading starts at every 120 ms with
+  150 ms to settle (the shared core's 250 and 300 are for a PC), moved to once; a timing the player
+  chose stays (`core/EditionDefaults.kt`). The timing sliders have Thai labels.
+- **The TV page on port 8795 (0.1.2)**, not the desktop's 8791, which the camera app ซับไทยขึ้นทีวี
+  holds on many of the same phones. A TV connected to an earlier test build is connected again once.
+  Connecting a TV opens the page first if it isn't open, and says so when another app holds the port,
+  instead of telling the user the phone isn't on Wi-Fi.
 
 Changed on 21 November 2026, from the original's commit `6cd9e5b`; the original's later fixes up to `95485f4` (the PS5 picture read through the GPU, no more green striped picture) are merged in.
 

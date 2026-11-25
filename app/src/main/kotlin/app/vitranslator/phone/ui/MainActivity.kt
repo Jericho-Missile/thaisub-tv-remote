@@ -478,7 +478,7 @@ class MainActivity : Activity(), Live.Watcher, CoreListener, Host {
         d.show()
     }
 
-    // ---- debug builds, for emulators: --es advertise 10.0.2.2:8791 (the stand-in core), --es fake_ps5 <address>, --es mode, --es tab
+    // ---- debug builds, for emulators: --es advertise 10.0.2.2:8795 (the stand-in core), --es fake_ps5 <address>, --es mode, --es tab
     private fun debugOptions(i: Intent?) {
         if (applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE == 0) return
         i?.getStringExtra("advertise")?.let { a -> (App.core as? app.vitranslator.phone.core.StubCore)?.advertise = a }

@@ -95,5 +95,14 @@
  "{n} read · {ms} ms": "อ่านแล้ว {n} · {ms} มิลลิวินาที",
  "Swearing": "คำหยาบ",
  "Swear words": "คำหยาบ",
- "On: English swearing becomes Thai swearing just as strong, with the rough words for I and you only on lines that swear. Off: polite, nothing crude. Claude and ChatGPT follow it. Switching forgets the lines this phone remembered, so they are translated again the new way.": "เปิด: คำด่าภาษาอังกฤษแปลเป็นคำด่าไทยแรงเท่ากัน ใช้ กู/มึง เฉพาะประโยคที่มีคำด่า · ปิด: สุภาพ ไม่มีคำหยาบเลย ใช้กับ Claude และ ChatGPT · เมื่อสลับ แอปจะลืมคำแปลที่จำไว้ในเครื่องนี้ แล้วแปลใหม่ตามแบบที่เลือก"
+ "On: English swearing becomes Thai swearing just as strong, with the rough words for I and you only on lines that swear. Off: polite, nothing crude. Claude and ChatGPT follow it. Switching forgets the lines this phone remembered, so they are translated again the new way.": "เปิด: คำด่าภาษาอังกฤษแปลเป็นคำด่าไทยแรงเท่ากัน ใช้ กู/มึง เฉพาะประโยคที่มีคำด่า · ปิด: สุภาพ ไม่มีคำหยาบเลย ใช้กับ Claude และ ChatGPT · เมื่อสลับ แอปจะลืมคำแปลที่จำไว้ในเครื่องนี้ แล้วแปลใหม่ตามแบบที่เลือก",
+ "Frames captured for reading text (per second)": "ภาพที่เก็บมาอ่านตัวหนังสือ (ภาพต่อวินาที)",
+ "Full-size frames used for reading text, game pages and saved frames. Also how often the pause menu checks whether its text changed. 12 is plenty; more costs CPU, especially at 4K. From OBS, about 12 is the most it can deliver.": "ภาพเต็มขนาดที่ใช้อ่านตัวหนังสือ หน้าเมนูของเกม และภาพที่บันทึกไว้ และเป็นความถี่ที่หน้าเมนูหยุดเกมเช็กว่าข้อความเปลี่ยนหรือยัง 12 ก็พอ มากกว่านี้มือถือทำงานหนักขึ้น",
+ "How often areas are read (ms)": "อ่านซับทุกกี่มิลลิวินาที",
+ "Lower = faster reaction, more CPU.": "ยิ่งน้อย ซับยิ่งขึ้นไว แต่มือถือทำงานหนักขึ้น",
+ "Wait for text to settle before translating (ms)": "รอให้ตัวหนังสือนิ่งก่อนแปล (มิลลิวินาที)",
+ "Avoids translating half-faded lines.": "กันไม่ให้แปลซับที่ยังขึ้นมาไม่เต็ม",
+ "Treat the English as gone after (ms)": "ถือว่าซับอังกฤษหายไปแล้ว หลังหายไปนาน (มิลลิวินาที)",
+ "Ignores short OCR blinks. The translation then stays as long as the English was on screen, and switches to the next line as soon as it is ready.": "ไม่สนใจตอนที่อ่านพลาดแวบเดียว คำแปลจะค้างอยู่นานเท่าที่ซับอังกฤษยังอยู่บนจอ และเปลี่ยนเป็นประโยคถัดไปทันทีที่แปลเสร็จ",
+ "This phone couldn't open the page the TV reads (port {port} is used by another app). Close the other app that sends subtitles to a TV, then try again.": "มือถือเปิดหน้าที่ทีวีใช้รับซับไม่ได้ (พอร์ต {port} มีแอปอื่นใช้อยู่) ให้ปิดแอปอื่นที่ส่งซับขึ้นทีวีก่อน แล้วลองใหม่"
 }
